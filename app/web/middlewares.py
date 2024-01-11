@@ -1,10 +1,11 @@
 import json
 import typing
 
-from aiohttp.web_exceptions import HTTPUnprocessableEntity
+from aiohttp.web_exceptions import HTTPForbidden, HTTPUnprocessableEntity
 from aiohttp.web_middlewares import middleware
 from aiohttp_apispec import validation_middleware
-
+from aiohttp_session import get_session
+from app.admin.models import Admin
 from app.web.utils import error_json_response
 
 if typing.TYPE_CHECKING:
@@ -19,6 +20,21 @@ HTTP_ERROR_CODES = {
     409: "conflict",
     500: "internal_server_error",
 }
+
+
+@middleware
+async def auth_middleware(request: "Request", handler):
+    session = await get_session(request)
+    if request.cookies.get('AIOHTTP_SESSION') and not session.get('admin'):
+        raise HTTPForbidden
+    if session.get('admin'):
+        request.admin = Admin(
+            id=session['admin']['id'],
+            email=session['admin']['email'],
+        )
+    else:
+        request.admin = None
+    return await handler(request)
 
 
 @middleware
@@ -38,5 +54,6 @@ async def error_handling_middleware(request: "Request", handler):
 
 
 def setup_middlewares(app: "Application"):
+    app.middlewares.append(auth_middleware)
     app.middlewares.append(error_handling_middleware)
     app.middlewares.append(validation_middleware)

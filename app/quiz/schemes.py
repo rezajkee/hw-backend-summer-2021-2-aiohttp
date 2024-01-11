@@ -15,7 +15,7 @@ class AnswerSchema(Schema):
 
 
 class ThemeListSchema(Schema):
-    pass
+    themes = fields.Nested(ThemeSchema, many=True)
 
 
 class ThemeIdSchema(Schema):

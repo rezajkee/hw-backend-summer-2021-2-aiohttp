@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "hw-backend-summer-2021-2-aiohttp"
+version = "0.1.0"
+description = ""
+authors = ["Anton <rezajkee@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+aiohttp = ">=3.7.4.post0"
+aiohttp-apispec = "2.2.1"
+pyyaml = "5.4.1"
+marshmallow = ">=3.13.0,<3.14.0"
+aiohttp-session = "2.9.0"
+cryptography = "3.4.7"
+pytest = "6.2.4"
+pytest-aiohttp = "0.3.0"
+markupsafe = "2.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+# -- AutoPEP8 --
+[tool.autopep8]
+max_line_length = 135
+
+# -- isort --
+[tool.isort]
+line_length = 135
+multi_line_output = 3
+sections = ['FUTURE', 'TYPINGS', 'STDLIB', 'THIRDPARTY', 'AIRFLOW', 'FIRSTPARTY', 'LOCALFOLDER']
+known_typings = ['typing']
+known_first_party = ["app"]
